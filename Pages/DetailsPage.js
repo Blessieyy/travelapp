@@ -21,9 +21,7 @@ const DetailsPage = () => {
 
       {/* Hotel Image */}
       <Image
-        source={{
-          'https://via.placeholder.com/400x200', 
-        }}
+        source={require('../assets/Images/tula.jpg')}
         style={styles.hotelImage}
       />
 
