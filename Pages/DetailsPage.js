@@ -1,109 +1,127 @@
-import React from "react";
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
+import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  FlatList,
+} from 'react-native';
+import { Rating } from 'react-native-ratings';
 
-const Details = [
-  {
-    name: "Pine Valley Resort",
-    location: "Gauteng",
-    image: require("../assets/Images/pine.jpg"),
-    rating: 4.5,
-    reviews: 120,
-  },
-];
+
 
 const DetailsPage = () => {
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={Details}
-        renderItem={({ item }) => (
-        
-           
-          <View style={styles.placedetailsContainer}>
-           
-            <View style={styles.info}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.location}>{item.location}</Text>
-              <Text style={styles.rating}>
-                Rating: {item.rating} - Reviews: {item.reviews}
-              </Text>
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Select Room</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-        keyExtractor={(item, index) => index.toString()}
+    <ScrollView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Hotel name</Text>
+      </View>
+
+      {/* Hotel Image */}
+      <Image
+        source={{
+          'https://via.placeholder.com/400x200', 
+        }}
+        style={styles.hotelImage}
       />
-    </View>
+
+      {/* Hotel Details */}
+      <View style={styles.detailsContainer}>
+        <Text style={styles.hotelName}>Hotel Alpha</Text>
+        <Text style={styles.hotelLocation}>City Center, USA</Text>
+        <View style={styles.ratingContainer}>
+          <Rating readonly startingValue={4.5} imageSize={20} />
+          <Text style={styles.reviewCount}>(1204 Reviews)</Text>
+        </View>
+        <Text style={styles.description}>
+details about the hotel
+        </Text>
+      </View>
+
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 16,
-    paddingTop: 20,
+    backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 16,
+  header: {
+    padding: 16,
+    backgroundColor: '#f5f5f5',
   },
-  landmarkItem: {
-    flexDirection: "row",
-    backgroundColor: "#f9f9f9",
-    borderRadius: 8,
-    marginBottom: 16,
-    padding: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-    marginRight: 12,
-  },
-  info: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: "0 0 30px rgba(0, 0, 0, 0.6)",
-    padding: 10,
-    borderRadius: 10,
-  },
-  name: {
+  headerText: {
     fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 4,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
-  location: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 4,
+  hotelImage: {
+    width: '100%',
+    height: 200,
   },
-  rating: {
+  detailsContainer: {
+    padding: 16,
+  },
+  hotelName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  hotelLocation: {
     fontSize: 14,
-    color: "#333",
+    color: 'gray',
+    marginTop: 4,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  reviewCount: {
+    marginLeft: 8,
+    fontSize: 14,
+    color: 'gray',
+  },
+  description: {
+    fontSize: 14,
+    marginTop: 8,
+    color: '#555',
+  },
+  reviewsContainer: {
+    padding: 16,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
     marginBottom: 8,
   },
-  button: {
-    backgroundColor: "#007BFF",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 4,
-    alignItems: "center",
+  reviewItem: {
+    flexDirection: 'row',
+    marginBottom: 16,
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  reviewContent: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  reviewerName: {
+    fontWeight: 'bold',
+  },
+  reviewDate: {
+    fontSize: 12,
+    color: 'gray',
+    marginTop: 4,
+  },
+  reviewText: {
+    fontSize: 14,
+    marginTop: 4,
+    color: '#555',
   },
 });
 
