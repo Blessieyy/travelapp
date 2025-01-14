@@ -1,3 +1,5 @@
+
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 
@@ -31,9 +33,16 @@ const landmarks = [
 ];
 
 const App = () => {
+    navigation = useNavigation()
+    const handleBackPress = () => {
+        navigation.navigate('landingPage');
+    }
   return (
     <ScrollView>
     <View style={styles.container}>
+    <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
+      <Text style={styles.back}>Back</Text>
+    </TouchableOpacity>
       <Text style={styles.heading}>Select Place</Text>
       <FlatList
         data={landmarks}
@@ -63,6 +72,23 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#EAE3D7',
   },
+
+  backButton: {
+    marginTop: 5,
+    backgroundColor: '#876631',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+
+    back: {
+      
+            color: '#fff',
+            fontSize: 14,
+            alignSelf: 'center',
+     
+    },
+  
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
