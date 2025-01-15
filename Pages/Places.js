@@ -35,7 +35,7 @@ const landmarks = [
 const App = () => {
     navigation = useNavigation()
     const handleBackPress = () => {
-        navigation.navigate('landingPage');
+        navigation.navigate('Landing');
     }
   return (
     <ScrollView>
