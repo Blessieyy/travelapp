@@ -11,7 +11,7 @@ const SignupScreen = () => {
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
       console.log(user);
-      navigation.navigate('Home'); // Navigate to LoginScreen on success
+      navigation.navigate('Landing'); // Navigate to LoginScreen on success
     } catch (error) {
       console.log(error);
     }
