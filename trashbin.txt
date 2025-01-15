@@ -1,0 +1,17 @@
+   <Button title="Select Profile Photo" onPress={selectProfilePhoto} />
+          {profilePhoto && (
+            <Image
+              source={{ uri: profilePhoto }}
+              style={styles.profilePhoto}
+            />
+ 
+<Button title="Save Profile" onPress={handleSaveProfile} />
+ 
+firebaseConfig
+ 
+firebaseConfig
+ 
+firebaseConfig
+ 
+firebaseConfig
+ 
