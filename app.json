@@ -19,11 +19,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.cornel90.travelapp"
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "webpack"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "939d2fa1-e1e8-4bb8-84b3-d24ecc526daf"
+      }
     }
   }
 }

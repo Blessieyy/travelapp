@@ -9,9 +9,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import { FOURSQUARE_API_KEY, OPENWEATHER_API_KEY } from '@env';
 
-const FOURSQUARE_API_KEY = 'myKey';
-const OPENWEATHER_API_KEY = 'myKey2';
 const { width } = Dimensions.get('window');
 
 const DetailsScreen = ({ route }) => {
@@ -56,22 +55,30 @@ const DetailsScreen = ({ route }) => {
 
   const fetchWeather = async () => {
     try {
+      if (!selectedLocation?.geocodes?.main?.latitude || !selectedLocation?.geocodes?.main?.longitude) {
+        throw new Error('Invalid location coordinates');
+      }
+
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?lat=${selectedLocation.geocodes.main.latitude}&lon=${selectedLocation.geocodes.main.longitude}&units=metric&appid=${OPENWEATHER_API_KEY}`
       );
 
       if (!response.ok) {
-        throw new Error('Weather data fetch failed');
+        throw new Error(`Weather data fetch failed: ${response.statusText}`);
       }
 
       const data = await response.json();
+      if (!data.list) {
+        throw new Error('Weather data is not in the expected format');
+      }
+
       setWeather(data.list.slice(0, 7)); // 7-day forecast
     } catch (err) {
-      console.error('OpenWeather API Error:', err);
+      console.error('OpenWeather API Error:', err.message);
     } finally {
       setWeatherLoading(false);
     }
-  };
+  };  
 
   const WeatherForecast = () => {
     if (weatherLoading) {

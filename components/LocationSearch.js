@@ -8,8 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-
-const FOURSQUARE_API_KEY = 'myKey';
+import { FOURSQUARE_API_KEY } from '@env';
 
 const LocationSearch = ({ onLocationSelect }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,7 +27,7 @@ const LocationSearch = ({ onLocationSelect }) => {
 
     try {
       const response = await fetch(
-        `https://api.foursquare.com/v3/places/search?query=${encodeURIComponent(query)}&limit=15`,
+        `https://api.foursquare.com/v3/places/search?query=${encodeURIComponent(query)}&limit=50`,
         {
           method: 'GET',
           headers: {
