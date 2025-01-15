@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Alert, Image, TouchableOpacity } from "react-native";
 import { auth } from "../firebase/authConfig";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase/authConfig";
 import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from 'react-native-image-picker';
+import { Buffer } from 'buffer';
 
 const ProfileScreen = () => {
   const [fullName, setFullName] = useState("");
   const [surname, setSurname] = useState("");
   const [cellNo, setCellNo] = useState("");
   const [email, setEmail] = useState("");
-  const [residentialAddress, setResidentialAddress] = useState("");
   const [town, setTown] = useState("");
   const [suburb, setSuburb] = useState("");
   const [houseNo, setHouseNo] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState(null);
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigation();
@@ -43,10 +45,10 @@ const ProfileScreen = () => {
         setSurname(userProfile.surname || "");
         setCellNo(userProfile.cellNo || "");
         setEmail(userProfile.email || "");
-        setResidentialAddress(userProfile.residentialAddress || "");
         setTown(userProfile.town || "");
         setSuburb(userProfile.suburb || "");
         setHouseNo(userProfile.houseNo || "");
+        setProfilePhoto(userProfile.profilePhoto || null);
       } else {
         console.log("No such document!");
       }
@@ -67,10 +69,10 @@ const ProfileScreen = () => {
         surname,
         cellNo,
         email,
-        residentialAddress,
         town,
         suburb,
         houseNo,
+        profilePhoto
       });
       setIsEditing(false); // Hide input fields after saving
       Alert.alert("Profile saved successfully");
@@ -86,6 +88,22 @@ const ProfileScreen = () => {
     } catch (error) {
       Alert.alert("Error logging out", error.message);
     }
+  };
+
+  const selectProfilePhoto = () => {
+    ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = response.assets[0].uri;
+        // Convert image to base64 string
+        ImagePicker.readAsDataURL(source)
+          .then((base64) => setProfilePhoto(base64))
+          .catch((error) => console.error("Error converting to base64: ", error));
+      }
+    });
   };
 
   return (
@@ -121,13 +139,6 @@ const ProfileScreen = () => {
             autoCapitalize="none"
           />
           <TextInput
-            placeholder="Residential Address"
-            value={residentialAddress}
-            onChangeText={setResidentialAddress}
-            style={[styles.input, styles.addressInput]}
-            multiline
-          />
-          <TextInput
             placeholder="Town"
             value={town}
             onChangeText={setTown}
@@ -145,17 +156,24 @@ const ProfileScreen = () => {
             onChangeText={setHouseNo}
             style={styles.input}
           />
+       
+          
           <Button title="Save Profile" onPress={handleSaveProfile} />
           <Button title="Cancel" onPress={() => setIsEditing(false)} color="grey" />
         </>
       ) : (
         <>
           <Text style={styles.greeting}>Hi, {fullName}!</Text>
+          {profilePhoto && (
+            <Image
+              source={{ uri: profilePhoto }}
+              style={styles.profilePhoto}
+            />
+          )}
           <Text>Full Name: {fullName}</Text>
           <Text>Surname: {surname}</Text>
           <Text>Cell Number: {cellNo}</Text>
           <Text>Email: {email}</Text>
-          <Text>Residential Address: {residentialAddress}</Text>
           <Text>Town: {town}</Text>
           <Text>Suburb: {suburb}</Text>
           <Text>House No: {houseNo}</Text>
@@ -182,8 +200,11 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
   },
-  addressInput: {
+  profilePhoto: {
+    width: 100,
     height: 100,
+    borderRadius: 50,
+    marginTop: 10,
   },
   greeting: {
     fontSize: 18,
