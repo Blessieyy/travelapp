@@ -10,6 +10,8 @@ import ProfilePage from "./Pages/ProfilePage";
 import LocationSearch from "./Components/LocationSearch";
 import LoginScreen from "./Pages/LoginScreen";
 import SignupScreen from "./Pages/SignupScreen";
+
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -26,7 +28,7 @@ const TabNavigator = () => (
 
         return <Icon name={iconName} size={size} color={color} />;
       },
-      tabBarActiveTintColor: "blue",
+      tabBarActiveTintColor: "brown",
       tabBarInactiveTintColor: "gray",
     })}
   >
