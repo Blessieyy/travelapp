@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Image, ScrollView } from 'react-native';
-
+import LocationSearch from '../Components/LocationSearch';
 // Sample data with images for places
 const places = [
   { name: 'Gauteng', image: require('../assets/Images/pine.jpg') },
@@ -26,7 +26,8 @@ const LandingPage = () => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.heading}>Travel App</Text>
+        <LocationSearch />
+        
 
         {/* Places Section */}
         <Text style={styles.heading}>Places</Text>

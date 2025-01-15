@@ -6,38 +6,70 @@ import {
   StyleSheet,
   ScrollView,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import { Rating } from 'react-native-ratings';
 
+const { width } = Dimensions.get('window');
 
+const DetailsPage = ({ route }) => {
+  const {
+    hotelName = 'Hotel Alpha',
+    hotelLocation = 'City Center, USA',
+    imageUrl = '../assets/Images/tula.jpg',
+    rating = 4.5,
+    reviews = 1204,
+    description = 'Details about the hotel.',
+    reviewData = [],
+  } = route.params || {};
 
-const DetailsPage = () => {
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Hotel name</Text>
+        <Text style={styles.headerText}>{hotelName}</Text>
       </View>
 
       {/* Hotel Image */}
       <Image
-        source={require('../assets/Images/tula.jpg')}
+        source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl}
         style={styles.hotelImage}
       />
 
       {/* Hotel Details */}
       <View style={styles.detailsContainer}>
-        <Text style={styles.hotelName}>Hotel Alpha</Text>
-        <Text style={styles.hotelLocation}>City Center, USA</Text>
+        <Text style={styles.hotelName}>{hotelName}</Text>
+        <Text style={styles.hotelLocation}>{hotelLocation}</Text>
         <View style={styles.ratingContainer}>
-          <Rating readonly startingValue={4.5} imageSize={20} />
-          <Text style={styles.reviewCount}>(1204 Reviews)</Text>
+          <Rating readonly startingValue={rating} imageSize={20} />
+          <Text style={styles.reviewCount}>({reviews} Reviews)</Text>
         </View>
-        <Text style={styles.description}>
-details about the hotel
-        </Text>
+        <Text style={styles.description}>{description}</Text>
       </View>
 
+      {/* Reviews */}
+      {reviewData.length > 0 && (
+        <View style={styles.reviewsContainer}>
+          <Text style={styles.sectionTitle}>Reviews</Text>
+          <FlatList
+            data={reviewData}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.reviewItem}>
+                <Image
+                  source={{ uri: item.avatar || 'https://via.placeholder.com/40' }}
+                  style={styles.avatar}
+                />
+                <View style={styles.reviewContent}>
+                  <Text style={styles.reviewerName}>{item.name}</Text>
+                  <Text style={styles.reviewDate}>{item.date}</Text>
+                  <Text style={styles.reviewText}>{item.text}</Text>
+                </View>
+              </View>
+            )}
+          />
+        </View>
+      )}
     </ScrollView>
   );
 };
@@ -57,8 +89,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   hotelImage: {
-    width: '100%',
-    height: 200,
+    width: width,
+    height: width * 0.5,
   },
   detailsContainer: {
     padding: 16,
