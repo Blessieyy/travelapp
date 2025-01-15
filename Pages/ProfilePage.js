@@ -1,123 +1,195 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { auth } from "../firebase/authConfig";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../firebase/authConfig";
+import { useNavigation } from "@react-navigation/native";
 
-const ProfilePage = () => {
+const ProfileScreen = () => {
+  const [fullName, setFullName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [cellNo, setCellNo] = useState("");
+  const [email, setEmail] = useState("");
+  const [residentialAddress, setResidentialAddress] = useState("");
+  const [town, setTown] = useState("");
+  const [suburb, setSuburb] = useState("");
+  const [houseNo, setHouseNo] = useState("");
+  const [user, setUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        fetchUserProfile(user.uid);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const fetchUserProfile = async (userId) => {
+    try {
+      const docRef = doc(db, "profiles", userId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userProfile = docSnap.data();
+        setFullName(userProfile.fullName || "");
+        setSurname(userProfile.surname || "");
+        setCellNo(userProfile.cellNo || "");
+        setEmail(userProfile.email || "");
+        setResidentialAddress(userProfile.residentialAddress || "");
+        setTown(userProfile.town || "");
+        setSuburb(userProfile.suburb || "");
+        setHouseNo(userProfile.houseNo || "");
+      } else {
+        console.log("No such document!");
+      }
+    } catch (error) {
+      Alert.alert("Error fetching profile", error.message);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user) {
+      Alert.alert("User not authenticated");
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, "profiles", user.uid), {
+        fullName,
+        surname,
+        cellNo,
+        email,
+        residentialAddress,
+        town,
+        suburb,
+        houseNo,
+      });
+      setIsEditing(false); // Hide input fields after saving
+      Alert.alert("Profile saved successfully");
+    } catch (error) {
+      Alert.alert("Error saving profile", error.message);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigation.navigate("Login");
+    } catch (error) {
+      Alert.alert("Error logging out", error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Image
-          source= "require('../assets/pexels-simon73-1323550.jpg')" 
-        />
-        <View style={styles.profileInfo}>
-          <Image
-            source= "require('../assets/pexels-simon73-1323550.jpg')"
-            style={styles.profileImage}
+      <Text style={styles.title}>Profile</Text>
+      {isEditing ? (
+        <>
+          <TextInput
+            placeholder="Full Name"
+            value={fullName}
+            onChangeText={setFullName}
+            style={styles.input}
           />
-          <Text style={styles.profileName}>John Doe</Text>
-          <Text style={styles.profileEmail}>johndoe@example.com</Text>
-        </View>
-      </View>
-
-      {/* Tabs */}
-      <View style={styles.tabs}>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>Bookings</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>Trips</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.tab, styles.activeTab]}>
-          <Text style={[styles.tabText, styles.activeTabText]}>Info</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Options */}
-      <ScrollView style={styles.optionsContainer}>
-        {['Personal Information', 'Payments', 'Settings'].map((option, index) => (
-          <TouchableOpacity key={index} style={styles.option}>
-            <Text style={styles.optionText}>{option}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+          <TextInput
+            placeholder="Surname"
+            value={surname}
+            onChangeText={setSurname}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Cell Number"
+            value={cellNo}
+            onChangeText={setCellNo}
+            style={styles.input}
+            keyboardType="phone-pad"
+          />
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            style={styles.input}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <TextInput
+            placeholder="Residential Address"
+            value={residentialAddress}
+            onChangeText={setResidentialAddress}
+            style={[styles.input, styles.addressInput]}
+            multiline
+          />
+          <TextInput
+            placeholder="Town"
+            value={town}
+            onChangeText={setTown}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Suburb"
+            value={suburb}
+            onChangeText={setSuburb}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="House No"
+            value={houseNo}
+            onChangeText={setHouseNo}
+            style={styles.input}
+          />
+          <Button title="Save Profile" onPress={handleSaveProfile} />
+          <Button title="Cancel" onPress={() => setIsEditing(false)} color="grey" />
+        </>
+      ) : (
+        <>
+          <Text style={styles.greeting}>Hi, {fullName}!</Text>
+          <Text>Full Name: {fullName}</Text>
+          <Text>Surname: {surname}</Text>
+          <Text>Cell Number: {cellNo}</Text>
+          <Text>Email: {email}</Text>
+          <Text>Residential Address: {residentialAddress}</Text>
+          <Text>Town: {town}</Text>
+          <Text>Suburb: {suburb}</Text>
+          <Text>House No: {houseNo}</Text>
+          <Button title="Edit Profile" onPress={() => setIsEditing(true)} />
+        </>
+      )}
+      <Button title="Logout" onPress={handleLogout} color="red" />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    padding: 20,
   },
-  header: {
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
   },
-  headerBackground: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+  input: {
+    borderBottomWidth: 1,
+    marginBottom: 10,
+    padding: 8,
+    fontSize: 16,
   },
-  profileInfo: {
-    alignItems: 'center',
+  addressInput: {
+    height: 100,
   },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    borderWidth: 2,
-    borderColor: '#fff',
-  },
-  profileName: {
+  greeting: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginTop: 8,
-  },
-  profileEmail: {
-    fontSize: 14,
-    color: '#fff',
-  },
-  tabs: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    backgroundColor: '#fff',
-  },
-  tab: {
-    paddingVertical: 10,
-  },
-  tabText: {
-    fontSize: 16,
-    color: '#555',
-  },
-  activeTab: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#007AFF',
-  },
-  activeTabText: {
-    color: '#007AFF',
-  },
-  optionsContainer: {
-    marginTop: 10,
-    paddingHorizontal: 20,
-  },
-  option: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  optionText: {
-    fontSize: 16,
-    color: '#333',
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });
 
-export default ProfilePage;
+export default ProfileScreen;
