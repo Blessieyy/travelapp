@@ -55,16 +55,12 @@ To run the app locally, follow these steps:
 **Home Page:**
 ![Home Page](assets/Images/HomePage.png)
 
-**Search Page:**
 ![Search Page](assets/Images/Search02.png)
 
-**Resorts Page:**
 ![Resort Page](assets/Images/Resort.png)
 
-**Signup Page:**
 ![Signup Page](assets/Images/SignUp.png)
 
-**Login Page:**
 ![Login Page](assets/Images/Login.png)
 
 
