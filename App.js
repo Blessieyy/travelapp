@@ -8,6 +8,7 @@ import Places from "./Pages/Places";
 import DetailsPage from "./Pages/DetailsPage";
 import ProfilePage from "./Pages/ProfilePage";
 import LocationSearch from "./Components/LocationSearch";
+import DetailsScreen from "./Screens/DetailsScreen";
 import LoginScreen from "./Pages/LoginScreen";
 import SignupScreen from "./Pages/SignupScreen";
 
@@ -66,6 +67,12 @@ export default function App() {
         <Stack.Screen
           name="DetailsPage"
           component={DetailsPage}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="Details"
+          component={DetailsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

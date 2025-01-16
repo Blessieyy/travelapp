@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; 
 import { FOURSQUARE_API_KEY } from '@env';
 
 const LocationSearch = ({ onLocationSelect }) => {
@@ -15,6 +16,8 @@ const LocationSearch = ({ onLocationSelect }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  const navigation = useNavigation(); 
 
   const searchLocations = async (query) => {
     if (query.length < 3) {
@@ -37,12 +40,8 @@ const LocationSearch = ({ onLocationSelect }) => {
         }
       );
   
-      console.log('Response status:', response.status);
-      console.log('Response headers:', [...response.headers.entries()]);
-  
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Error response:', errorText);
         throw new Error(`API Error: ${response.status} - ${errorText}`);
       }
   
@@ -51,12 +50,14 @@ const LocationSearch = ({ onLocationSelect }) => {
     } catch (err) {
       const errorMessage = `Error fetching locations: ${err.message}`;
       setError(errorMessage);
-      console.error('Full error:', err);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleLocationSelect = (location) => {
+    navigation.navigate('Details', { selectedLocation: location });
+  };
 
   const handleSearch = (text) => {
     setSearchQuery(text);
@@ -77,9 +78,7 @@ const LocationSearch = ({ onLocationSelect }) => {
         placeholderTextColor="#666"
       />
 
-      {loading && (
-        <ActivityIndicator style={styles.loader} size="small" color="#4A90E2" />
-      )}
+      {loading && <ActivityIndicator style={styles.loader} size="small" color="#4A90E2" />}
 
       {error && <Text style={styles.error}>{error}</Text>}
 
@@ -91,20 +90,12 @@ const LocationSearch = ({ onLocationSelect }) => {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.resultItem}
-              onPress={() => onLocationSelect(item)}
+              onPress={() => handleLocationSelect(item)} // Navigate on select
             >
               <Text style={styles.locationName}>{item.name}</Text>
               <Text style={styles.locationAddress}>
                 {item.location?.formatted_address || 'No address available'}
               </Text>
-              <Text style={styles.locationCategory}>
-                {item.categories?.[0]?.name || 'No category available'}
-              </Text>
-              {item.description && (
-                <Text style={styles.locationDescription}>
-                  {item.description}
-                </Text>
-              )}
             </TouchableOpacity>
           )}
         />
@@ -145,16 +136,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginTop: 2,
-  },
-  locationCategory: {
-    fontSize: 14,
-    color: '#4A90E2',
-    marginTop: 5,
-  },
-  locationDescription: {
-    fontSize: 12,
-    color: '#999',
-    marginTop: 5,
   },
   loader: {
     marginTop: 10,
