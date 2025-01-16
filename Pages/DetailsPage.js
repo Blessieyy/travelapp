@@ -1,4 +1,3 @@
-// filepath: /c:/Users/Blessing/Documents/CodeTribeProjects/React Native/travelapp/Pages/DetailsPage.js
 import React from 'react';
 import {
   View,

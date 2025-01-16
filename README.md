@@ -27,7 +27,7 @@ To run the app locally, follow these steps:
    npx expo start
 
 
-- **Usage**: 
+## Usage: 
 1. Open the app: Launch the app on your mobile device using the Expo Go app or an emulator.
 
 2. Search for a location: Use the search bar to find a destination.
@@ -39,7 +39,7 @@ To run the app locally, follow these steps:
 5. Check the weather: Access the 7-day weather forecast to plan your activities accordingly.
 
 
-- **Technologies Used**:
+## Technologies Used:
 
 - ***React Native:*** For building the mobile application.
 
@@ -50,13 +50,21 @@ To run the app locally, follow these steps:
 - ***OpenWeather API:*** For retrieving current weather conditions and forecasts.
 
 
-- **Screenshots**:
+## Screenshots:
+
+**Home Page:**
 ![Home Page](assets/Images/HomePage.png)
 
+**Search Page:**
+![Search Page](assets/Images/Search02.png)
 
-![Search Page](assets/Images/Search.png)
-
-
+**Resorts Page:**
 ![Resort Page](assets/Images/Resort.png)
+
+**Signup Page:**
+![Signup Page](assets/Images/SignUp.png)
+
+**Login Page:**
+![Login Page](assets/Images/Login.png)
 
 

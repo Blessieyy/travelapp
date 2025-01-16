@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, FlatList, TouchableOpacity } from "react-native";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
-import { auth } from "../firebase/authConfig"; // Import Firebase auth
+import { auth } from "../firebase/authConfig"; 
 import { onAuthStateChanged } from "firebase/auth";
 import Icon from 'react-native-vector-icons/Ionicons';
 

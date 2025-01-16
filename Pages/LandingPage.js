@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Image, ScrollView } from 'react-native';
 import LocationSearch from '../Components/LocationSearch';
+
 // Sample data with images for places
 const places = [
   { name: 'Gauteng', image: require('../assets/Images/pine.jpg') },

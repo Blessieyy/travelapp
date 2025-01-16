@@ -21,35 +21,42 @@ const LocationSearch = ({ onLocationSelect }) => {
       setSearchResults([]);
       return;
     }
-
+  
     setLoading(true);
     setError(null);
-
+  
     try {
       const response = await fetch(
         `https://api.foursquare.com/v3/places/search?query=${encodeURIComponent(query)}&limit=50`,
         {
           method: 'GET',
           headers: {
-            Accept: 'application/json',
-            Authorization: FOURSQUARE_API_KEY,
+            'Accept': 'application/json',
+            'Authorization': FOURSQUARE_API_KEY,  
           },
         }
       );
-
+  
+      console.log('Response status:', response.status);
+      console.log('Response headers:', [...response.headers.entries()]);
+  
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`API Error: ${response.status} - ${errorText}`);
       }
-
+  
       const data = await response.json();
       setSearchResults(data.results || []);
     } catch (err) {
-      setError('Error fetching locations. Please try again.');
-      console.error('Foursquare API Error:', err);
+      const errorMessage = `Error fetching locations: ${err.message}`;
+      setError(errorMessage);
+      console.error('Full error:', err);
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleSearch = (text) => {
     setSearchQuery(text);
