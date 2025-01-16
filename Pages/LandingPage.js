@@ -8,6 +8,11 @@ const places = [
   { name: 'North West', image: require('../assets/Images/kingdom.jpg') },
   { name: 'Western Cape', image: require('../assets/Images/tula.jpg') },
   { name: 'Kwa-Zulu Natal', image: require('../assets/Images/nambiti-plains-private.jpg') },
+  { name: 'Free State', image: require('../assets/Images/kingdom.jpg') },
+  { name: 'Western Cape', image: require('../assets/Images/tula.jpg') },
+  { name: 'Limpopo', image: require('../assets/Images/nambiti-plains-private.jpg') },
+  { name: 'Northern Cape', image: require('../assets/Images/nambiti-plains-private.jpg') },
+  { name: 'Eastern Cape', image: require('../assets/Images/nambiti-plains-private.jpg') },
 ];
 
 const recommendations = [
