@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/authConfig";
 import { useNavigation } from "@react-navigation/native";
@@ -7,10 +7,9 @@ import { useNavigation } from "@react-navigation/native";
 const SignupScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Error message state
+  const [errorMessage, setErrorMessage] = useState("");
   const navigation = useNavigation();
 
-  // Validation function (does not depend on hooks)
   const validateInputs = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -23,7 +22,7 @@ const SignupScreen = () => {
   };
 
   const handleSignup = async () => {
-    setErrorMessage(""); // Clear errors
+    setErrorMessage("");
     const validationError = validateInputs();
     if (validationError) {
       setErrorMessage(validationError);
@@ -40,55 +39,112 @@ const SignupScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Signup</Text>
-      {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      <Button title="Signup" onPress={handleSignup} />
-      <Text style={styles.loginText} onPress={() => navigation.navigate("Login")}>
-        Already have an account? Log in
-      </Text>
-    </View>
+    <ImageBackground source={require('../assets/Images/4091164.jpg')} style={styles.backgroundImage}>
+      <View style={styles.overlay} />
+      <Text style={styles.title}>Hello, Lets Travel</Text>
+      <Text style={styles.sub}>Create an account</Text>
+      <View style={styles.container}>
+        <Text style={styles.head}>Signup</Text>
+        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          placeholderTextColor="#aaa"
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+          placeholderTextColor="#aaa"
+        />
+        <TouchableOpacity style={styles.button} onPress={handleSignup}>
+          <Text style={styles.buttonText}>Signup</Text>
+        </TouchableOpacity>
+        <Text style={styles.loginText} onPress={() => navigation.navigate("Login")}>
+          Already have an account? <Text style={styles.loginLink}>Log in</Text>
+        </Text>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
+  backgroundImage: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  title: {
-    fontSize: 24,
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  container: {
+    width: '90%',
+    padding: 20,
+    backgroundColor: "rgba(167, 164, 164, 0.88)",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  title:{
+    fontSize: 40,
     fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 20,
+    bottom: 100,
+  },
+
+  sub:{
+    fontSize: 20,
+    fontWeight: "",
+    color: "#fff",
+    marginBottom: 20,
+    bottom: 100,
+  },
+  head: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#fff",
     marginBottom: 20,
   },
   input: {
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    padding: 8,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
     fontSize: 16,
+  },
+  button: {
+    width: '100%',
+    backgroundColor: "#A78258",
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+  },
+  loginText: {
+    color: "#333",
+    fontSize: 16,
+  },
+  loginLink: {
+    color: "#007BFF",
+    fontWeight: "bold",
   },
   errorText: {
     color: "red",
     marginBottom: 10,
-  },
-  loginText: {
-    color: "blue",
-    marginTop: 20,
-    textAlign: "center",
   },
 });
 

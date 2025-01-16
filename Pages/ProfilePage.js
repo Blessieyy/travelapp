@@ -6,7 +6,6 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase/authConfig";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from 'react-native-image-picker';
-import { Buffer } from 'buffer';
 
 const ProfileScreen = () => {
   const [fullName, setFullName] = useState("");
@@ -98,10 +97,7 @@ const ProfileScreen = () => {
         console.log('ImagePicker Error: ', response.error);
       } else {
         const source = response.assets[0].uri;
-        // Convert image to base64 string
-        ImagePicker.readAsDataURL(source)
-          .then((base64) => setProfilePhoto(base64))
-          .catch((error) => console.error("Error converting to base64: ", error));
+        setProfilePhoto(source);
       }
     });
   };
@@ -156,10 +152,15 @@ const ProfileScreen = () => {
             onChangeText={setHouseNo}
             style={styles.input}
           />
-       
-          
-          <Button title="Save Profile" onPress={handleSaveProfile} />
-          <Button title="Cancel" onPress={() => setIsEditing(false)} color="grey" />
+          <TouchableOpacity style={styles.photoButton} onPress={selectProfilePhoto}>
+            <Text style={styles.photoButtonText}>Select Profile Photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
+            <Text style={styles.saveButtonText}>Save Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton} onPress={() => setIsEditing(false)}>
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
         </>
       ) : (
         <>
@@ -170,34 +171,44 @@ const ProfileScreen = () => {
               style={styles.profilePhoto}
             />
           )}
-          <Text>Full Name: {fullName}</Text>
-          <Text>Surname: {surname}</Text>
-          <Text>Cell Number: {cellNo}</Text>
-          <Text>Email: {email}</Text>
-          <Text>Town: {town}</Text>
-          <Text>Suburb: {suburb}</Text>
-          <Text>House No: {houseNo}</Text>
-          <Button title="Edit Profile" onPress={() => setIsEditing(true)} />
+          <Text style={styles.infoText}>Full Name: {fullName}</Text>
+          <Text style={styles.infoText}>Surname: {surname}</Text>
+          <Text style={styles.infoText}>Cell Number: {cellNo}</Text>
+          <Text style={styles.infoText}>Email: {email}</Text>
+          <Text style={styles.infoText}>Town: {town}</Text>
+          <Text style={styles.infoText}>Suburb: {suburb}</Text>
+          <Text style={styles.infoText}>House No: {houseNo}</Text>
+          <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
+            <Text style={styles.editButtonText}>Edit Profile</Text>
+          </TouchableOpacity>
         </>
       )}
-      <Button title="Logout" onPress={handleLogout} color="red" />
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 20,
+    backgroundColor: "#f5f5f5",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    textAlign: "center",
   },
   input: {
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    padding: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
     fontSize: 16,
   },
   profilePhoto: {
@@ -205,11 +216,72 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginTop: 10,
+    alignSelf: "center",
   },
   greeting: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+    textAlign: "center",
+  },
+  infoText: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  photoButton: {
+    backgroundColor: "#007BFF",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  photoButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  saveButton: {
+    backgroundColor: "#28a745",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  saveButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  cancelButton: {
+    backgroundColor: "#6c757d",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  cancelButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  editButton: {
+    backgroundColor: "#007BFF",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  editButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  logoutButton: {
+    backgroundColor: "#dc3545",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 16,
   },
 });
 
