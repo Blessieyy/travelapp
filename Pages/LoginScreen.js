@@ -10,6 +10,17 @@ const LoginScreen = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigation = useNavigation();
 
+  const validateInputs = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address.";
+    }
+    if (password.length < 6) {
+      return "Password must be at least 6 characters long.";
+    }
+    return null;
+  };
+
   const handleLogin = async () => {
     const validationError = validateInputs();
     if (validationError) {
@@ -29,20 +40,21 @@ const LoginScreen = () => {
 
   return (
     <ImageBackground source={require('../assets/Images/4091164.jpg')} style={styles.backgroundImage}>
-      
       <View style={styles.overlay} />
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Hello, Lets Travel</Text>
-        </View>
+      </View>
       <View style={styles.container}>
         <Text style={styles.head}>Login</Text>
-        <TextInput style={styles.input}
+        <TextInput
+          style={styles.input}
           placeholder="Email"
           placeholderTextColor="#aaa"
           value={email}
           onChangeText={setEmail}
         />
-        <TextInput style={styles.input}
+        <TextInput
+          style={styles.input}
           placeholder="Password"
           placeholderTextColor="#aaa"
           value={password}
@@ -71,7 +83,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  title:{
+  title: {
     fontSize: 40,
     fontWeight: "bold",
     color: "#fff",
@@ -84,7 +96,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(167, 164, 164, 0.88)",
     borderRadius: 10,
     alignItems: "center",
-
   },
   head: {
     fontSize: 28,

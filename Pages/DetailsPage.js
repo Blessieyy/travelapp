@@ -1,3 +1,4 @@
+// filepath: /c:/Users/Blessing/Documents/CodeTribeProjects/React Native/travelapp/Pages/DetailsPage.js
 import React from 'react';
 import {
   View,
@@ -9,37 +10,38 @@ import {
   Dimensions,
 } from 'react-native';
 import { Rating } from 'react-native-ratings';
+import { useRoute } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
-const DetailsPage = ({ route }) => {
+const DetailsPage = () => {
+  const route = useRoute();
   const {
-    hotelName = 'Hotel Alpha',
-    hotelLocation = 'City Center, USA',
-    imageUrl = '../assets/Images/tula.jpg',
-    rating = 4.5,
-    reviews = 1204,
-    description = 'Details about the hotel.',
-    reviewData = [],
-  } = route.params || {};
+    name,
+    location,
+    image,
+    rating,
+    reviews,
+    description,
+  } = route.params.place;
 
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>{hotelName}</Text>
+        <Text style={styles.headerText}>{name}</Text>
       </View>
 
       {/* Hotel Image */}
       <Image
-        source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl}
+        source={image}
         style={styles.hotelImage}
       />
 
       {/* Hotel Details */}
       <View style={styles.detailsContainer}>
-        <Text style={styles.hotelName}>{hotelName}</Text>
-        <Text style={styles.hotelLocation}>{hotelLocation}</Text>
+        <Text style={styles.hotelName}>{name}</Text>
+        <Text style={styles.hotelLocation}>{location}</Text>
         <View style={styles.ratingContainer}>
           <Rating readonly startingValue={rating} imageSize={20} />
           <Text style={styles.reviewCount}>({reviews} Reviews)</Text>
@@ -48,12 +50,12 @@ const DetailsPage = ({ route }) => {
       </View>
 
       {/* Reviews */}
-      {reviewData.length > 0 && (
+      {reviews.length > 0 && (
         <View style={styles.reviewsContainer}>
           <Text style={styles.sectionTitle}>Reviews</Text>
           <FlatList
-            data={reviewData}
-            keyExtractor={(item) => item.id.toString()}
+            data={reviews}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View style={styles.reviewItem}>
                 <Image
@@ -82,25 +84,33 @@ const styles = StyleSheet.create({
   header: {
     padding: 16,
     backgroundColor: '#f5f5f5',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   headerText: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: '#333',
   },
   hotelImage: {
     width: width,
-    height: width * 0.5,
+    height: width * 0.6,
+    resizeMode: 'cover',
   },
   detailsContainer: {
     padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   hotelName: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
+    color: '#333',
   },
   hotelLocation: {
-    fontSize: 14,
+    fontSize: 16,
     color: 'gray',
     marginTop: 4,
   },
@@ -115,21 +125,31 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   description: {
-    fontSize: 14,
+    fontSize: 16,
     marginTop: 8,
     color: '#555',
   },
   reviewsContainer: {
     padding: 16,
+    backgroundColor: '#f9f9f9',
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: '#333',
   },
   reviewItem: {
     flexDirection: 'row',
     marginBottom: 16,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 2,
   },
   avatar: {
     width: 40,
@@ -142,6 +162,8 @@ const styles = StyleSheet.create({
   },
   reviewerName: {
     fontWeight: 'bold',
+    fontSize: 16,
+    color: '#333',
   },
   reviewDate: {
     fontSize: 12,

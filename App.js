@@ -11,7 +11,6 @@ import LocationSearch from "./Components/LocationSearch";
 import LoginScreen from "./Pages/LoginScreen";
 import SignupScreen from "./Pages/SignupScreen";
 
-
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -60,6 +59,13 @@ export default function App() {
         <Stack.Screen
           name="Landing"
           component={TabNavigator}
+          options={{ headerShown: false }}
+        />
+
+        {/* DetailsPage screen */}
+        <Stack.Screen
+          name="DetailsPage"
+          component={DetailsPage}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
